@@ -1,1 +1,1 @@
-# connect.io.csharp
+# csharp.POC.v0.1.ugly
