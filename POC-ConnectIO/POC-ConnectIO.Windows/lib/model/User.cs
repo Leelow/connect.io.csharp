@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConnectIO.lib.Model
+namespace LinkIOcsharp.model
 {
     public class User
     {
+        public String Login { get; set; }
+        public String ID { get; set; }
+
     }
 }

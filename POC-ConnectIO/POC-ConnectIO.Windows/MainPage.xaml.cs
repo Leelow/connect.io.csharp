@@ -17,9 +17,9 @@ using Windows.UI.Xaml.Shapes;
 using Windows.UI.Input;
 using Windows.UI;
 
-using ConnectIO.lib;
+using LinkIOcsharp;
 using Windows.Networking.Connectivity;
-using POC_ConnectIO.lib;
+using POC_ConnectIO;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -31,6 +31,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using Windows.Storage.Pickers;
 using System.Xml.Linq;
+using LinkIOcsharp.model;
 
 
 // Pour en savoir plus sur le modèle d'élément Page vierge, consultez la page http://go.microsoft.com/fwlink/?LinkId=234238
@@ -48,7 +49,7 @@ namespace POC_ConnectIO
 
         public static Point lastPoint;
         public static Boolean isDrawing;
-        public static ConnectIO.ConnectIO cio;
+        public static LinkIOcsharp.LinkIO cio;
 
         public void PhotoTaken()
         {
@@ -66,7 +67,7 @@ namespace POC_ConnectIO
             isDrawing = false;
 
             // Config the connect.io instance
-            cio = ConnectIOImp.create()
+            cio = LinkIOImp.create()
                 .connectTo("bastienbaret.com:8080")
                 .withUser("TestApi_Windows");
 
@@ -115,16 +116,16 @@ namespace POC_ConnectIO
 
             });
 
-            cio.onUserInGroupChanged(async (o) =>
+            cio.onUserInRoomChanged(async (o) =>
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                  {
 
-                     List<String> e = (List<String>)o;
+                     List<User> e = (List<User>)o;
                      String users = "Utilisateurs : ";
-                     foreach (String user in e)
+                     foreach (User user in e)
                      {
-                         users += user + ", ";
+                         users += user.Login + ", ";
                      }
                      TE_Users.Text = users.Substring(0, users.Length - 2);
 
@@ -133,9 +134,9 @@ namespace POC_ConnectIO
             });
 
             // Connect to the server and join the "abcd" room
-            cio.connect((Object o) => {
+            cio.connect(() => {
                 //debug.Text = "e";
-                cio.joinGroup("abcd");
+                cio.joinRoom("abcd", (string a, List<User> b) => { });
             });
 
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Newtonsoft.Json.Linq;
 
-namespace POC_ConnectIO.lib
+namespace LinkIOcsharp.model
 {
     public class Event
     {

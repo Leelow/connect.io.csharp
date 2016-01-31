@@ -104,10 +104,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CanvasInteraction.cs" />
-    <Compile Include="lib\ConnectIO.cs" />
-    <Compile Include="lib\ConnectIOImp.cs" />
-    <Compile Include="lib\model\Event.cs" />
     <Compile Include="lib\exception\NotConnectedException.cs" />
+    <Compile Include="lib\LinkIO.cs" />
+    <Compile Include="lib\LinkIOImp.cs" />
+    <Compile Include="lib\model\Event.cs" />
     <Compile Include="lib\model\User.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

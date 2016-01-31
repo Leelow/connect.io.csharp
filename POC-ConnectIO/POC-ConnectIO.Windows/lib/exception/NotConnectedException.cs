@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConnectIO.lib.exception
+namespace LinkIOcsharp.exception
 {
     public class NotConnectedException : Exception
     {
