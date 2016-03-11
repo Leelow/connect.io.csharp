@@ -1,0 +1,21 @@
+﻿<Page
+    x:Class="POC_LinkIO.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:POC_LinkIO"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="#FFEDEDED">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Image Source="img/logo.png" Width="285" Margin="0,0,0,20" />
+            <TextBox Width="300" PlaceholderText="Login" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Login, Mode=TwoWay}"></TextBox>
+            <PasswordBox Width="300" PlaceholderText="Mot de passe" VerticalAlignment="Center" HorizontalAlignment="Left"></PasswordBox>
+            <Button Content="Connexion" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0" BorderBrush="#535353" Background="#535353" Click="Button_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>
