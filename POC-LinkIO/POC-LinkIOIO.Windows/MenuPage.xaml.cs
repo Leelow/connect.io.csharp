@@ -40,7 +40,7 @@ namespace POC_LinkIO
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
-            if (!rootFrame.Navigate(typeof(MainPage), Login))
+            if (!rootFrame.Navigate(typeof(WhiteBoardPage), Login))
             {
                 throw new Exception("Failed to go to the next page.");
             }

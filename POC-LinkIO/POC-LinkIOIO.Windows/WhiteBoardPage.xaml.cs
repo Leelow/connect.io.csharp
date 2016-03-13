@@ -38,11 +38,11 @@ using LinkIOcsharp.model;
 
 namespace POC_LinkIO
 {
-  
+
     /// <summary>
     /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class WhiteBoardPage : Page
     {
         private string login;
 
@@ -56,12 +56,7 @@ namespace POC_LinkIO
 
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            login = e.Parameter as string;
-        }
-
-        public MainPage()
+        public WhiteBoardPage()
         {
             Application.Current.DebugSettings.EnableFrameRateCounter = false;
 
@@ -69,7 +64,15 @@ namespace POC_LinkIO
             canvasInteraction = new CanvasInteraction(Canvas);
 
             isDrawing = false;
+        }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            login = e.Parameter as string;
+        }
+
+        private void PageLoaded(object sender, RoutedEventArgs r)
+        {
             // Config the connect.io instance
             lio = LinkIOImp.create()
                 .connectTo("bastienbaret.com:8080")
@@ -98,10 +101,10 @@ namespace POC_LinkIO
                     Size size = new Size(e.get<double>("w"), e.get<double>("h"));
                     Point position = new Point(e.get<double>("x"), e.get<double>("y"));
 
-                    if(size.Width > 0 && size.Height > 0)
+                    if (size.Width > 0 && size.Height > 0)
                     {
                         canvasInteraction.DrawImage(position, size, imgBytes);
-                    }       
+                    }
 
                 });
 
@@ -123,23 +126,22 @@ namespace POC_LinkIO
             lio.onUserInRoomChanged(async (o) =>
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                 {
+                {
 
-                     List<User> e = (List<User>)o;
-                     String users = "Utilisateurs : ";
-                     foreach (User user in e)
-                     {
-                         users += user.Login + ", ";
-                         //MessageDialog dlg = new MessageDialog(user.Login + "(" + user.ID + ")"); dlg.ShowAsync();
-                     }
-                     TE_Users.Text = users.Substring(0, users.Length - 2);
+                    List<User> e = (List<User>)o;
+                    String users = "";
+                    foreach (User user in e)
+                    {
+                        users += user.Login + "\n";
+                    }
+                    Users.Text = users.Substring(0, users.Length - 1);
 
-                 });
-
+                });
             });
 
             // Connect to the server and join the "abcd" room
-            lio.connect(() => {
+            lio.connect(() =>
+            {
                 //debug.Text = "e";
                 lio.joinRoom("abcd", (string a, List<User> b) => { });
             });
@@ -155,7 +157,7 @@ namespace POC_LinkIO
         public void pointerMoved(object sender, PointerRoutedEventArgs e)
         {
             // If we are drawing and we had the focus
-            if(e.Pointer.IsInContact && isDrawing)
+            if (e.Pointer.IsInContact && isDrawing)
             {
 
                 // Gte the current point
@@ -201,9 +203,9 @@ namespace POC_LinkIO
         private void appSizeChanged(object sender, SizeChangedEventArgs e)
         {
             //MessageDialog dlg = new MessageDialog(Window.Current.Bounds.Height.ToString()); dlg.ShowAsync();
-            Canvas.SetTop(Canvas, 50);
+            Canvas.SetTop(Canvas, 0);
 
-            Canvas.Height = e.NewSize.Height - 50;
+            Canvas.Height = e.NewSize.Height;
             Canvas.Width = e.NewSize.Width;
         }
 
@@ -257,9 +259,6 @@ namespace POC_LinkIO
             canvasInteraction.DrawImage(new Point(0.5, 0.5), new Size(0.5, 0.5), bytes);*/
 
             //Img1.Source = _BitmapImage;
-
-
         }
     }
-
 }
