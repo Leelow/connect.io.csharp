@@ -148,6 +148,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Color_Picker, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RadialColorPickerCV.1.2.8\lib\Color_Picker.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EngineIoClientDotNet, Version=0.9.21.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EngineIoClientDotNet.0.9.21\lib\netcore45\EngineIoClientDotNet.dll</HintPath>
       <Private>True</Private>

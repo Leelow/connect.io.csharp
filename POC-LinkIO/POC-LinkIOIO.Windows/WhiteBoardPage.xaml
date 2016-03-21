@@ -5,34 +5,43 @@
     xmlns:local="using:POC_LinkIO"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xc="using:Color_Picker"
     mc:Ignorable="d" SizeChanged="appSizeChanged" Loaded="PageLoaded">
 
-    <StackPanel Orientation="Horizontal" Background="#FFEDEDED">
+    <StackPanel Orientation="Horizontal" Background="#FFEDEDED" x:Name="Parent">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150px" >
                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="20" Margin="10,10,10,10">Utilisateurs :</TextBlock>
-                <TextBlock x:Name="Users" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="12" Margin="10,0,10,10"/>
+                <TextBlock Name="Users" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="12" Margin="10,0,10,10"/>
             </StackPanel>
         </ScrollViewer>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <TextBlock>gdrf</TextBlock>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <!-- Color Picker -->
+                <xc:Clr_Pckr Width="75" Height="75" Name="ColorPicker" Margin="0, 0, 10, 0"/>
+                
+                <!-- Thickness Picker -->
+                <ComboBox x:Name="ThicknessPicker" SelectedValuePath="Value" SelectedValue="{Binding DrawingThickness, Mode=TwoWay}" Width="90">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Fill="Black" Width="20" Height="{Binding Value}" Margin="0,2,5,2" />
+                                <TextBlock Text="{Binding Value}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>                   
+                </ComboBox>
+
+                <StackPanel Orientation="Vertical">
+                    <Button Name="ButtonPhoto" Content="Prendre une photo" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="13" Foreground="Black" Click="ButtonPhotoClicked" Width="200" />
+                    <Button Name="ButtonClear" Content="Tout supprimer" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="13" Foreground="Black" Click="ButtonClearClicked"  Width="200" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                    <Button x:Name="ButtonPhoto" Content="Prendre une photo" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="13.333" Foreground="Black" Click="ButtonPhotoClicked"/>
-                    <Button x:Name="ButtonClear" Content="Tout supprimer" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="13.333" Foreground="Black" Click="ButtonClearClicked"/>
-                </StackPanel>
-            </Grid>
+            </StackPanel>
             <Canvas PointerPressed="pointerPressed"
                 PointerMoved="pointerMoved"
                 PointerReleased="pointerReleased"
                 PointerExited="pointerExited"
-                x:Name="Canvas"
+                Name="Canvas"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Background="White"

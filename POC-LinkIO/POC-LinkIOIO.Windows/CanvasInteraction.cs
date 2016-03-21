@@ -26,22 +26,22 @@ namespace POC_LinkIO
             this.Canvas = c;
         }
 
-        public void DrawLine(Point fromPoint, Point toPoint, String color)
+        public void DrawLine(Point fromPoint, Point toPoint, String color, int strockeThickness)
         {
             byte r = Convert.ToByte(color.Substring(1, 2), 16);
             byte g = Convert.ToByte(color.Substring(3, 2), 16);
             byte b = Convert.ToByte(color.Substring(5, 2), 16);
-            DrawLine(fromPoint, toPoint, Color.FromArgb(255, r, g, b));
+            DrawLine(fromPoint, toPoint, Color.FromArgb(255, r, g, b), strockeThickness);
         }
 
-        public void DrawLine(Point fromPoint, Point toPoint, Color color)
+        public void DrawLine(Point fromPoint, Point toPoint, Color color, int strockeThickness)
         {
 
             Line line = new Line();
             SolidColorBrush brush = new SolidColorBrush();
             brush.Color = color;
             line.Stroke = brush;
-            line.StrokeThickness = 5;
+            line.StrokeThickness = strockeThickness;
             line.X1 = fromPoint.X;
             line.Y1 = fromPoint.Y;
             line.X2 = toPoint.X;

@@ -1,74 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-using Windows.UI.Xaml.Shapes;
-using Windows.UI.Input;
 using Windows.UI;
 
 using LinkIOcsharp;
-using Windows.Networking.Connectivity;
-using POC_LinkIO;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-using Windows.UI.Popups;
 using Windows.Media.Capture;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage;
 using Windows.Media.MediaProperties;
-using Windows.Graphics.Imaging;
-using Windows.Storage.Streams;
-using Windows.Storage.Pickers;
-using System.Xml.Linq;
 using LinkIOcsharp.model;
-
-
-// Pour en savoir plus sur le modèle d'élément Page vierge, consultez la page http://go.microsoft.com/fwlink/?LinkId=234238
+using System.ComponentModel;
 
 namespace POC_LinkIO
 {
-
-    /// <summary>
-    /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame.
-    /// </summary>
-    public sealed partial class WhiteBoardPage : Page
+    public sealed partial class WhiteBoardPage : Page, INotifyPropertyChanged
     {
         private string login;
+        private Color drawingColor;
+        private int drawingThickness;
 
-        public static CanvasInteraction canvasInteraction;
-        public static Point lastPoint;
-        public static Boolean isDrawing;
-        public static LinkIOcsharp.LinkIO lio;
+        private CanvasInteraction canvasInteraction;
+        private Point lastPoint;
+        private Boolean isDrawing;
+        private LinkIOcsharp.LinkIO lio;
 
-        public void PhotoTaken()
+        
+
+        /*public void PhotoTaken()
         {
 
-        }
+        }*/
 
         public WhiteBoardPage()
         {
             Application.Current.DebugSettings.EnableFrameRateCounter = false;
 
             this.InitializeComponent();
+            DataContext = this;
+
             canvasInteraction = new CanvasInteraction(Canvas);
+
+            // Set color picker
+            ColorPicker.colorChanged += (object sender, EventArgs args) =>
+            {
+                DrawingColor = ColorPicker.SelectedColor;
+            };
+            DrawingColor = ColorPicker.SelectedColor;
+            
+
+            // Set thickness picker
+            List<ThicknessClass> thicknessList = new List<ThicknessClass>();
+            thicknessList.Add(new ThicknessClass(1));
+            thicknessList.Add(new ThicknessClass(2));
+            thicknessList.Add(new ThicknessClass(5));
+            thicknessList.Add(new ThicknessClass(10));
+            ThicknessPicker.ItemsSource = thicknessList;
+            DrawingThickness = 5;
 
             isDrawing = false;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            login = e.Parameter as string;
+            login = "a";//e.Parameter as string;
         }
 
         private void PageLoaded(object sender, RoutedEventArgs r)
@@ -118,7 +118,7 @@ namespace POC_LinkIO
                     Event e = (Event)o;
                     Point fromPoint = new Point(e.get<double>("fromX") * Canvas.Width, e.get<double>("fromY") * Canvas.Height);
                     Point toPoint = new Point(e.get<double>("toX") * Canvas.Width, e.get<double>("toY") * Canvas.Height);
-                    canvasInteraction.DrawLine(fromPoint, toPoint, e.get<String>("color"));
+                    canvasInteraction.DrawLine(fromPoint, toPoint, e.get<String>("color"), DrawingThickness);
                 });
 
             });
@@ -159,13 +159,10 @@ namespace POC_LinkIO
             // If we are drawing and we had the focus
             if (e.Pointer.IsInContact && isDrawing)
             {
-
-                // Gte the current point
+                // Get the current point
                 Point currentPoint = e.GetCurrentPoint(Canvas).Position;
-
                 // Draw line
-                canvasInteraction.DrawLine(lastPoint, currentPoint, Colors.Red);
-
+                canvasInteraction.DrawLine(lastPoint, currentPoint, DrawingColor, DrawingThickness);
                 // Send line object
                 Object lineObj = new
                 {
@@ -173,7 +170,7 @@ namespace POC_LinkIO
                     fromY = lastPoint.Y / Canvas.Height,
                     toX = currentPoint.X / Canvas.Width,
                     toY = currentPoint.Y / Canvas.Height,
-                    color = "#FF0000"
+                    color = DrawingColor.ToString()
                 };
 
                 /*<User> l = new List<User>();
@@ -183,7 +180,6 @@ namespace POC_LinkIO
                 l.Add(u);
                 cio.send("line", lineObj, l, false);*/
                 lio.send("line", lineObj, false);
-
 
                 // Update last point
                 lastPoint = currentPoint;
@@ -202,7 +198,6 @@ namespace POC_LinkIO
 
         private void appSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //MessageDialog dlg = new MessageDialog(Window.Current.Bounds.Height.ToString()); dlg.ShowAsync();
             Canvas.SetTop(Canvas, 0);
 
             Canvas.Height = e.NewSize.Height;
@@ -216,49 +211,67 @@ namespace POC_LinkIO
 
         private async void ButtonPhotoClicked(object sender, RoutedEventArgs e)
         {
-
-            /*var l_camera = new CameraCaptureUI();
-            l_camera.PhotoSettings.MaxResolution = CameraCaptureUIMaxPhotoResolution.HighestAvailable;
-            l_camera.PhotoSettings.CroppedAspectRatio = new Size(3, 4);
-            var photo = l_camera.CaptureFileAsync(CameraCaptureUIMode.Photo);
-            photo.Completed();*/
-
             var _MediaCapture = new MediaCapture();
             await _MediaCapture.InitializeAsync();
-            //Cap1.Source = _MediaCapture;
-            //await _MediaCapture.StartPreviewAsync();
 
             var _Name = Guid.NewGuid().ToString();
             var _Opt = CreationCollisionOption.ReplaceExisting;
-            var _File = await ApplicationData.Current.LocalFolder
-                .CreateFileAsync(_Name, _Opt);
+            var _File = await ApplicationData.Current.LocalFolder.CreateFileAsync(_Name, _Opt);
 
             var _ImageFormat = ImageEncodingProperties.CreatePng();
-            await _MediaCapture
-                .CapturePhotoToStorageFileAsync(_ImageFormat, _File);
+            await _MediaCapture.CapturePhotoToStorageFileAsync(_ImageFormat, _File);
             var _BitmapImage = new BitmapImage(new Uri(_File.Path));
 
-            //_BitmapImage.PixelHeight = 500;
-            //_BitmapImage.PixelHeight = 500;
-
             canvasInteraction.DrawImage(new Point(0.1, 0.1), new Size(0.1, 0.1), _BitmapImage);
+        }
 
+        public Color DrawingColor
+        {
+            get
+            {
+                return drawingColor;
+            }
+            set
+            {
+                drawingColor = value;
+                OnPropertyChanged("DrawingColor");
+            }
+        }
 
+        public int DrawingThickness
+        {
+            get
+            {
+                return drawingThickness;
+            }
+            set
+            {
+                drawingThickness = value;
+                OnPropertyChanged("DrawingThickness");
+            }
+        }
 
-            /*var fo = new FileOpenPicker();
-            fo.FileTypeFilter.Add(".png");
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(String name)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+            }
+        }
+    }
 
-            var file = await fo.PickSingleFileAsync();        
-            var fStream = await file.OpenAsync(FileAccessMode.Read);
+    public class ThicknessClass
+    {
+        public ThicknessClass(int value)
+        {
+            Value = value;
+        }
 
-            var reader = new DataReader(fStream.GetInputStreamAt(0));
-            var bytes = new byte[fStream.Size];
-            await reader.LoadAsync((uint)fStream.Size);
-            reader.ReadBytes(bytes);
-
-            canvasInteraction.DrawImage(new Point(0.5, 0.5), new Size(0.5, 0.5), bytes);*/
-
-            //Img1.Source = _BitmapImage;
+        public int Value
+        {
+            get;
+            set;
         }
     }
 }
