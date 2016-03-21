@@ -68,7 +68,7 @@ namespace POC_LinkIO
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            login = "a";//e.Parameter as string;
+            login = e.Parameter as string;
         }
 
         private void PageLoaded(object sender, RoutedEventArgs r)
