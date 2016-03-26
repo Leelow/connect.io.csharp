@@ -41,6 +41,11 @@ namespace LinkIOcsharp.model
             return (T) data[s];
         }
 
+        public Boolean containsKey(String s)
+        {
+            return data.ContainsKey(s);
+        }
+
         public Boolean isMe()
         {
             return me;

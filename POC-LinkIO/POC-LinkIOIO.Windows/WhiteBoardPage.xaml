@@ -19,7 +19,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <!-- Color Picker -->
                 <xc:Clr_Pckr Width="75" Height="75" Name="ColorPicker" Margin="0, 0, 10, 0"/>
-                
+
                 <!-- Thickness Picker -->
                 <ComboBox x:Name="ThicknessPicker" SelectedValuePath="Value" SelectedValue="{Binding DrawingThickness, Mode=TwoWay}" Width="90">
                     <ComboBox.ItemTemplate>
@@ -29,13 +29,26 @@
                                 <TextBlock Text="{Binding Value}" />
                             </StackPanel>
                         </DataTemplate>
-                    </ComboBox.ItemTemplate>                   
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <StackPanel Orientation="Vertical">
-                    <Button Name="ButtonPhoto" Content="Prendre une photo" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="13" Foreground="Black" Click="ButtonPhotoClicked" Width="200" />
-                    <Button Name="ButtonClear" Content="Tout supprimer" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="13" Foreground="Black" Click="ButtonClearClicked"  Width="200" />
-                </StackPanel>
+                <!-- Eraser button -->
+                <Button Name="ButtonClear" Click="ButtonClearClicked" Height="75">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Image Source="img/eraser.png"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- TCamera button -->
+                <Button Name="ButtonPhoto" Click="ButtonPhotoClicked" Height="75">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Image Source="img/camera.png"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </StackPanel>
             <Canvas PointerPressed="pointerPressed"
                 PointerMoved="pointerMoved"

@@ -55,11 +55,12 @@ namespace POC_LinkIO
             
 
             // Set thickness picker
+            int[] colorTab = {1,2,5,10,15,20,25};
             List<ThicknessClass> thicknessList = new List<ThicknessClass>();
-            thicknessList.Add(new ThicknessClass(1));
-            thicknessList.Add(new ThicknessClass(2));
-            thicknessList.Add(new ThicknessClass(5));
-            thicknessList.Add(new ThicknessClass(10));
+            for (int i = 0; i < colorTab.Length; i++)
+            {
+                thicknessList.Add(new ThicknessClass(colorTab[i]));
+            }
             ThicknessPicker.ItemsSource = thicknessList;
             DrawingThickness = 5;
 
@@ -118,7 +119,8 @@ namespace POC_LinkIO
                     Event e = (Event)o;
                     Point fromPoint = new Point(e.get<double>("fromX") * Canvas.Width, e.get<double>("fromY") * Canvas.Height);
                     Point toPoint = new Point(e.get<double>("toX") * Canvas.Width, e.get<double>("toY") * Canvas.Height);
-                    canvasInteraction.DrawLine(fromPoint, toPoint, e.get<String>("color"), DrawingThickness);
+                    int thickness = e.containsKey("thinckness") ? e.get<int>("thickness") : 5;
+                    canvasInteraction.DrawLine(fromPoint, toPoint, e.get<String>("color"), thickness);
                 });
 
             });
@@ -142,7 +144,6 @@ namespace POC_LinkIO
             // Connect to the server and join the "abcd" room
             lio.connect(() =>
             {
-                //debug.Text = "e";
                 lio.joinRoom("abcd", (string a, List<User> b) => { });
             });
         }
@@ -170,7 +171,7 @@ namespace POC_LinkIO
                     fromY = lastPoint.Y / Canvas.Height,
                     toX = currentPoint.X / Canvas.Width,
                     toY = currentPoint.Y / Canvas.Height,
-                    color = DrawingColor.ToString()
+                    color = "#" + DrawingColor.ToString().Substring(3,6)
                 };
 
                 /*<User> l = new List<User>();

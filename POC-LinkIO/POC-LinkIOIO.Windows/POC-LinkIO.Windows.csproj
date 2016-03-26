@@ -131,6 +131,8 @@
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="img\camera.png" />
+    <Content Include="img\eraser.png" />
     <Content Include="img\logo.png" />
   </ItemGroup>
   <ItemGroup>
