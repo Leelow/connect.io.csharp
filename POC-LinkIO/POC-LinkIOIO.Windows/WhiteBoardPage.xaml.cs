@@ -37,7 +37,7 @@ namespace POC_LinkIO
         {
             Application.Current.DebugSettings.EnableFrameRateCounter = false;
 
-            this.InitializeComponent();
+            InitializeComponent();
             DataContext = this;
 
             canvasInteraction = new CanvasInteraction(Canvas);
@@ -110,6 +110,16 @@ namespace POC_LinkIO
                     Point toPoint = new Point(e.get<double>("toX") * Canvas.Width, e.get<double>("toY") * Canvas.Height);
                     int thickness = e.containsKey("thinckness") ? e.get<int>("thickness") : 5;
                     canvasInteraction.DrawLine(fromPoint, toPoint, e.get<String>("color"), thickness);
+                });
+
+            });
+
+            lio.on("message", async (o) =>
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    Event e = (Event)o;
+                    Tchat.Text += "\n" + e.get<string>("author") + " : " + e.get<string>("text");
                 });
 
             });
@@ -213,7 +223,22 @@ namespace POC_LinkIO
             canvasInteraction.DrawImage(new Point(0.1, 0.1), new Size(0.1, 0.1), _BitmapImage);
         }
 
-        void OnThumbDragStarted(object sender, DragStartedEventArgs args)
+        private void SendMessage(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter && TchatText.Text != "")
+            {
+                Object message = new
+                {
+                    author = login,
+                    text = TchatText.Text
+                };
+
+                lio.send("message", message, true);
+                TchatText.Text = "";
+            }
+        }
+
+        private void OnThumbDragStarted(object sender, DragStartedEventArgs args)
         {
             Thumb thumb = (Thumb)sender;
             Grid grid = (Grid)thumb.Parent;
@@ -224,7 +249,7 @@ namespace POC_LinkIO
             rightColDef.Width = new GridLength(rightColDef.ActualWidth, GridUnitType.Star);
         }
 
-        void OnThumbDragDelta(object sender, DragDeltaEventArgs args)
+        private void OnThumbDragDelta(object sender, DragDeltaEventArgs args)
         {
             Thumb thumb = (Thumb)sender;
             Grid grid = (Grid)thumb.Parent;
@@ -241,12 +266,12 @@ namespace POC_LinkIO
             }
         }
 
-        void OnThumbPointerEntered(object sender, PointerRoutedEventArgs args)
+        private void OnThumbPointerEntered(object sender, PointerRoutedEventArgs args)
         {
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeWestEast, 0);
         }
 
-        void OnThumbPointerExited(object sender, PointerRoutedEventArgs args)
+        private void OnThumbPointerExited(object sender, PointerRoutedEventArgs args)
         {
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
         }

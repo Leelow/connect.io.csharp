@@ -70,10 +70,10 @@
                 <ColumnDefinition Width="0" MaxWidth="150" />
             </Grid.ColumnDefinitions>
 
-            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Name="ScrollViewer" Grid.Column="0" VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400px">
-                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="12" Margin="10,10,10,10">fgdgd</TextBlock>
-                    <TextBox Width="400" PlaceholderText="Tchat" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBox>
+                    <TextBlock Name="Tchat" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="12" Margin="10,10,10,10" />
+                    <TextBox Name="TchatText" PlaceholderText="Tchat" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400" KeyUp="SendMessage" />
                 </StackPanel>
             </ScrollViewer>
 
