@@ -16,12 +16,14 @@ using Windows.Storage;
 using Windows.Media.MediaProperties;
 using LinkIOcsharp.model;
 using System.ComponentModel;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace POC_LinkIO
 {
     public sealed partial class WhiteBoardPage : Page, INotifyPropertyChanged
     {
         private string login;
+        private string server = "bastienbaret.com:8080";
         private Color drawingColor;
         private int drawingThickness;
 
@@ -30,12 +32,6 @@ namespace POC_LinkIO
         private Boolean isDrawing;
         private LinkIOcsharp.LinkIO lio;
 
-        
-
-        /*public void PhotoTaken()
-        {
-
-        }*/
 
         public WhiteBoardPage()
         {
@@ -75,25 +71,19 @@ namespace POC_LinkIO
         private void PageLoaded(object sender, RoutedEventArgs r)
         {
             // Config the connect.io instance
-            lio = LinkIOImp.create()
-                .connectTo("bastienbaret.com:8080")
-                .withUser(login);
+            lio = LinkIOImp.create().connectTo(server).withUser(login);
 
             lio.on("clear", async (o) =>
             {
-
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-
                     canvasInteraction.Clear();
-
                 });
 
             });
 
             lio.on("image", async (o) =>
             {
-
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     Event e = (Event)o;
@@ -113,7 +103,6 @@ namespace POC_LinkIO
 
             lio.on("line", async (o) =>
             {
-
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     Event e = (Event)o;
@@ -129,17 +118,10 @@ namespace POC_LinkIO
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-
-                    List<User> e = (List<User>)o;
-                    String users = "";
-                    foreach (User user in e)
-                    {
-                        users += user.Login + "\n";
-                    }
-                    Users.Text = users.Substring(0, users.Length - 1);
-
+                    updateUsersConnected(o);
                 });
             });
+
 
             // Connect to the server and join the "abcd" room
             lio.connect(() =>
@@ -147,6 +129,17 @@ namespace POC_LinkIO
                 lio.joinRoom("abcd", (string a, List<User> b) => { });
             });
         }
+
+        public void updateUsersConnected(List<User> o)
+        {
+            String users = "";
+            foreach (User user in o)
+            {
+                users += user.Login + "\n";
+            }
+            Users.Text = users.Substring(0, users.Length - 1);
+        }
+
 
         public void pointerPressed(object sender, PointerRoutedEventArgs e)
         {
@@ -174,12 +167,6 @@ namespace POC_LinkIO
                     color = "#" + DrawingColor.ToString().Substring(3,6)
                 };
 
-                /*<User> l = new List<User>();
-                User u = new User();
-                u.Login = "user1";
-                u.ID = "/#JNjcUIcWHp-EhIJtAAAN";
-                l.Add(u);
-                cio.send("line", lineObj, l, false);*/
                 lio.send("line", lineObj, false);
 
                 // Update last point
@@ -224,6 +211,44 @@ namespace POC_LinkIO
             var _BitmapImage = new BitmapImage(new Uri(_File.Path));
 
             canvasInteraction.DrawImage(new Point(0.1, 0.1), new Size(0.1, 0.1), _BitmapImage);
+        }
+
+        void OnThumbDragStarted(object sender, DragStartedEventArgs args)
+        {
+            Thumb thumb = (Thumb)sender;
+            Grid grid = (Grid)thumb.Parent;
+            ColumnDefinition leftColDef = grid.ColumnDefinitions[0];
+            ColumnDefinition rightColDef = grid.ColumnDefinitions[2];
+
+            leftColDef.Width = new GridLength(leftColDef.ActualWidth, GridUnitType.Star);
+            rightColDef.Width = new GridLength(rightColDef.ActualWidth, GridUnitType.Star);
+        }
+
+        void OnThumbDragDelta(object sender, DragDeltaEventArgs args)
+        {
+            Thumb thumb = (Thumb)sender;
+            Grid grid = (Grid)thumb.Parent;
+            ColumnDefinition leftColDef = grid.ColumnDefinitions[0];
+            ColumnDefinition rightColDef = grid.ColumnDefinitions[2];
+
+            try
+            {
+                leftColDef.Width = new GridLength(leftColDef.Width.Value + args.HorizontalChange, GridUnitType.Star);
+                rightColDef.Width = new GridLength(rightColDef.Width.Value - args.HorizontalChange, GridUnitType.Star);
+            }
+            catch (System.ArgumentException)
+            {
+            }
+        }
+
+        void OnThumbPointerEntered(object sender, PointerRoutedEventArgs args)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeWestEast, 0);
+        }
+
+        void OnThumbPointerExited(object sender, PointerRoutedEventArgs args)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
         }
 
         public Color DrawingColor
