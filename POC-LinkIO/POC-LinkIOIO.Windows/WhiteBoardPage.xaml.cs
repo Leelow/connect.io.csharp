@@ -24,13 +24,16 @@ namespace POC_LinkIO
     {
         private string login;
         private string server = "bastienbaret.com:8080";
-        private Color drawingColor;
-        private int drawingThickness;
+        private LinkIOcsharp.LinkIO lio;
 
         private CanvasInteraction canvasInteraction;
+
+        private Color drawingColor;
+        private int drawingThickness;
         private Point lastPoint;
         private Boolean isDrawing;
-        private LinkIOcsharp.LinkIO lio;
+
+        private List<String> users;
 
 
         public WhiteBoardPage()
@@ -61,6 +64,8 @@ namespace POC_LinkIO
             DrawingThickness = 5;
 
             isDrawing = false;
+
+            users = new List<String>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -71,6 +76,7 @@ namespace POC_LinkIO
         private void PageLoaded(object sender, RoutedEventArgs r)
         {
             // Config the connect.io instance
+            users.Add(login);
             lio = LinkIOImp.create().connectTo(server).withUser(login);
 
             lio.on("clear", async (o) =>
@@ -128,7 +134,37 @@ namespace POC_LinkIO
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    updateUsersConnected(o);
+                    List<String> usersConnected = new List<String>();
+                    foreach (User user in o)
+                    {
+                        usersConnected.Add(user.Login);
+                    }
+                    usersConnected.RemoveAll(item => users.Contains(item));
+                    foreach (String user in usersConnected)
+                    {
+                        Tchat.Text += "\n" + user + " is now connected";
+                    }
+
+                    List<String> usersDisconnected = users;
+                    foreach(User user in o)
+                    {
+                        if (usersDisconnected.Contains(user.Login))
+                        {
+                            usersDisconnected.Remove(user.Login);
+                        }
+                    }
+                    foreach (String user in usersDisconnected)
+                    {
+                        Tchat.Text += "\n" + user + " is now disconnected";
+                    }
+
+                    foreach (User user in o)
+                    {
+                        if (!users.Contains(user.Login))
+                        {
+                            users.Add(user.Login);
+                        }
+                    }
                 });
             });
 
@@ -140,7 +176,7 @@ namespace POC_LinkIO
             });
         }
 
-        public void updateUsersConnected(List<User> o)
+        /*public void updateUsersConnected(List<User> o)
         {
             String users = "";
             foreach (User user in o)
@@ -148,7 +184,7 @@ namespace POC_LinkIO
                 users += user.Login + "\n";
             }
             Users.Text = users.Substring(0, users.Length - 1);
-        }
+        }*/
 
 
         public void pointerPressed(object sender, PointerRoutedEventArgs e)

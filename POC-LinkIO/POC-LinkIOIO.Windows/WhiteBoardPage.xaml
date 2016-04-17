@@ -66,8 +66,8 @@
         <Grid Grid.Column="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="0" MaxWidth="150" />
+                <!--<ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="0" MaxWidth="150" />-->
             </Grid.ColumnDefinitions>
 
             <ScrollViewer Name="ScrollViewer" Grid.Column="0" VerticalScrollBarVisibility="Auto">
@@ -77,14 +77,14 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <Thumb Grid.Column="1" Width="5" DragStarted="OnThumbDragStarted" DragDelta="OnThumbDragDelta" PointerEntered="OnThumbPointerEntered" PointerExited="OnThumbPointerExited" />
+            <!--<Thumb Grid.Column="1" Width="5" DragStarted="OnThumbDragStarted" DragDelta="OnThumbDragDelta" PointerEntered="OnThumbPointerEntered" PointerExited="OnThumbPointerExited" />
 
             <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="20" Margin="10,10,10,5">Utilisateurs :</TextBlock>
                     <TextBlock Name="Users" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="12" Margin="10,0,10,10"/>
                 </StackPanel>
-            </ScrollViewer>
+            </ScrollViewer>-->
         </Grid>
     </Grid>
 </Page>
