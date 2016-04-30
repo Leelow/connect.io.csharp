@@ -38,16 +38,13 @@ namespace POC_LinkIO
         {
 
             Line line = new Line();
-            SolidColorBrush brush = new SolidColorBrush();
-            brush.Color = color;
-            line.Stroke = brush;
+            line.Stroke = new SolidColorBrush(color);
             line.StrokeThickness = strockeThickness;
             line.X1 = fromPoint.X;
             line.Y1 = fromPoint.Y;
             line.X2 = toPoint.X;
             line.Y2 = toPoint.Y;
             Canvas.Children.Add(line);
-
         }
 
         public void DrawImage(Point center, Size s, BitmapImage image)

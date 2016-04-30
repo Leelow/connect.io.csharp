@@ -15,6 +15,8 @@ using Windows.Media.MediaProperties;
 using System.ComponentModel;
 using Windows.UI.Xaml.Controls.Primitives;
 using link.io.csharp.model;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 namespace POC_LinkIO
 {
@@ -30,6 +32,7 @@ namespace POC_LinkIO
         private Boolean isDrawing;
 
         private User currentUser;
+        private String previousAuthor;
         private List<String> users;
 
 
@@ -60,6 +63,7 @@ namespace POC_LinkIO
 
             isDrawing = false;
 
+            previousAuthor = "";
             users = new List<String>();
         }
 
@@ -122,7 +126,7 @@ namespace POC_LinkIO
                 {
                     Event e = (Event)o;
                     Dictionary<string, dynamic> data = e.get<Dictionary<string, dynamic>>();
-                    Tchat.Text += "\n" + data["author"] + " : " + data["text"];
+                    WriteMessage(data["author"], data["text"], false);
                 });
 
             });
@@ -139,7 +143,8 @@ namespace POC_LinkIO
                     usersConnected.RemoveAll(item => users.Contains(item));
                     foreach (String user in usersConnected)
                     {
-                        Tchat.Text += "\n" + user + " is now connected";
+                        WriteMessage(null, "\n" + user + " is now connected", false);
+                        previousAuthor = "";
                     }
 
                     List<String> usersDisconnected = users;
@@ -152,7 +157,8 @@ namespace POC_LinkIO
                     }
                     foreach (String user in usersDisconnected)
                     {
-                        Tchat.Text += "\n" + user + " is now disconnected";
+                        WriteMessage(null, "\n" + user + " is now disconnected", false);
+                        previousAuthor = "";
                     }
 
                     foreach (User user in o)
@@ -259,8 +265,111 @@ namespace POC_LinkIO
                     text = TchatText.Text
                 };
 
-                lio.send("message", message, true);
+                lio.send("message", message, false);
+                WriteMessage(currentUser.Mail, TchatText.Text, true);
                 TchatText.Text = "";
+            }
+        }
+
+        private void WriteMessage(string author, string text, bool me)
+        {
+            if (author == null)
+            {
+                Grid grid = new Grid()
+                {
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Margin = new Thickness(3)
+                };
+
+                TextBlock block = new TextBlock()
+                {
+                    FontSize = 15,
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    Text = text
+                };
+
+                grid.Children.Add(block);
+                Tchat.Children.Add(grid);
+            }
+            else
+            {
+                if (me)
+                {
+                    Grid grid = new Grid()
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        Margin = new Thickness(3)
+                    };
+
+                    TextBlock textblock = new TextBlock()
+                    {
+                        FontSize = 15,
+                        Foreground = new SolidColorBrush(Colors.Black),
+                        TextWrapping = TextWrapping.Wrap,
+                        Text = text
+                    };
+
+                    Border rectangle = new Border()
+                    {
+                        BorderBrush = new SolidColorBrush(Color.FromArgb(255, 188, 199, 214)),
+                        Background = new SolidColorBrush(Color.FromArgb(255, 224, 237, 255)),
+                        BorderThickness = new Thickness(1),
+                        Padding = new Thickness(3),
+                        Child = textblock
+                    };
+
+                    grid.Children.Add(rectangle);
+                    Tchat.Children.Add(grid);
+                }
+                else
+                {
+                    if (!previousAuthor.Equals(author))
+                    {
+                        Grid grid2 = new Grid()
+                        {
+                            HorizontalAlignment = HorizontalAlignment.Left
+                        };
+
+                        TextBlock authorblock = new TextBlock()
+                        {
+                            FontSize = 15,
+                            Foreground = new SolidColorBrush(Colors.Black),
+                            Text = author
+                        };
+
+                        grid2.Children.Add(authorblock);
+                        Tchat.Children.Add(grid2);
+
+                        previousAuthor = author;
+                    }
+
+
+                    Grid grid = new Grid()
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        Margin = new Thickness(3,0,3,3)
+                    };
+
+                    TextBlock textblock = new TextBlock()
+                    {
+                        FontSize = 15,
+                        Foreground = new SolidColorBrush(Colors.Black),
+                        TextWrapping = TextWrapping.Wrap,
+                        Text = text
+                    };
+
+                    Border rectangle = new Border()
+                    {
+                        BorderBrush = new SolidColorBrush(Color.FromArgb(255, 188, 199, 214)),
+                        Background = new SolidColorBrush(Color.FromArgb(255, 254, 254, 254)),
+                        BorderThickness = new Thickness(1),
+                        Padding = new Thickness(3),
+                        Child = textblock
+                    };
+
+                    grid.Children.Add(rectangle);
+                    Tchat.Children.Add(grid);
+                }
             }
         }
 
