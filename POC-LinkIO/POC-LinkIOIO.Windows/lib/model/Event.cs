@@ -5,55 +5,37 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.IO;
+//using System.Runtime.Serialization.Formatters.Binary;TODO
 
-namespace LinkIOcsharp.model
+namespace link.io.csharp.model
 {
     public class Event
     {
         private String type;
-        private Boolean me;
-        private Dictionary<String, Object> data;
+        private JObject root;
+        private string obj;
+        private bool cSharpBinarySerializer;
 
-        public Event(JObject jsonObj)
+        public Event(JObject jsonObj, bool cSharpBinarySerializer)
         {
             try
             {
-
-                this.type = (String) jsonObj.SelectToken("type");
-                data = new Dictionary<String, Object>();
-
-                JObject ds = (JObject) jsonObj.SelectToken("data");
-                foreach(KeyValuePair<String,JToken> j in ds)
-                {
-                    data.Add(j.Key, j.Value.ToObject<Object>());
-                }
-                
+                this.cSharpBinarySerializer = cSharpBinarySerializer;
+                root = jsonObj;
+                this.type = (String)jsonObj.SelectToken("type");
+                this.obj = jsonObj.SelectToken("data").ToObject<string>();
             }
-            catch (Exception e)
-            {
-                //e.printStackTrace();
-            }
+            catch (Exception e){ }
         }
 
-        public T get<T>(String s)
+        public T get<T>()
         {
-
-            return (T) data[s];
-        }
-
-        public Boolean containsKey(String s)
-        {
-            return data.ContainsKey(s);
-        }
-
-        public Boolean isMe()
-        {
-            return me;
-        }
-
-        public void setMe(Boolean me)
-        {
-            this.me = me;
+            /*if(cSharpBinarySerializer)
+                return (T)deserializeObject(obj);
+            elseTODO*/
+            return root.SelectToken("data").ToObject<T>();
         }
 
         public String getType()
@@ -61,9 +43,15 @@ namespace LinkIOcsharp.model
             return type;
         }
 
-        public void setType(String type)
+        /*private static object deserializeObject(string str)
         {
-            this.type = type;
-        }
+            byte[] bytes = Convert.FromBase64String(str);
+
+            using (MemoryStream stream = new MemoryStream(bytes))
+            {
+                return new BinaryFormatter().Deserialize(stream);
+            }
+        }TODO*/
     }
+
 }

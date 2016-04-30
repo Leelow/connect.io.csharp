@@ -1,35 +1,15 @@
-﻿using LinkIOcsharp.model;
+﻿using link.io.csharp.model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LinkIOcsharp
+namespace link.io.csharp
 {
     public interface LinkIO
     {
-        /// <summary>
-        /// Specify the server url
-        /// </summary>
-        /// <param name="serverIP">ef</param>
-        /// <returns></returns>
-        LinkIO connectTo(String serverIP);
-
-        /// <summary>
-        /// Specify the user that will be connected
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        LinkIO withUser(String user);
-
-        /// <summary>
-        /// Start connection
-        /// </summary>
-        /// <param name="callback">Called when connected</param>
-        /// <returns></returns>
-        LinkIO connect(Action callback);
-
         /// <summary>
         /// Create a new room with a random ID and join it
         /// </summary>
@@ -48,7 +28,7 @@ namespace LinkIOcsharp
         /// </summary>
         /// <param name="callback">Called with a list of <seealso cref="User"/> in the current room</param>
         void getAllUsersInCurrentRoom(Action<List<User>> callback);
-        
+
         /// <summary>
         /// Set an event handler that is called when an <seealso cref="User"/> join or leave the current room
         /// </summary>
@@ -101,6 +81,11 @@ namespace LinkIOcsharp
         /// <param name="receiveAlso"></param>
         void send(String eventName, Object data, List<User> receivers);
 
+        LinkIOFile sendFile(String eventName, Stream stream, String fileName, double validity);
+        LinkIOFile sendFile(String eventName, Stream stream, String fileName, double validity, List<User> receivers);
+        void sendFile(String eventName, LinkIOFile file);
+        void sendFile(String eventName, LinkIOFile file, List<User> receivers);
+
         /// <summary>
         /// Get latency with the server
         /// </summary>
@@ -112,5 +97,13 @@ namespace LinkIOcsharp
         /// </summary>
         /// <returns></returns>
         bool isConnected();
+
+        /// <summary>
+        /// Disconnect from current server
+        /// </summary>
+        void disconnect();
+
+
+        User getCurrentUser();
     }
 }

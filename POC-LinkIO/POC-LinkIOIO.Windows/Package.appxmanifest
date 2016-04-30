@@ -2,7 +2,7 @@
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
   <Identity Name="329cc3c2-cd17-4391-a12c-68d4513af38b" Publisher="CN=Leo" Version="1.0.0.0" />
   <Properties>
-    <DisplayName>POC-ConnectIO.Windows</DisplayName>
+    <DisplayName>POC-LinkIO.Windows</DisplayName>
     <PublisherDisplayName>Leo</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,8 +14,8 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="POC_ConnectIO.Windows.App">
-      <m2:VisualElements DisplayName="POC-ConnectIO.Windows" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="POC-ConnectIO.Windows" ForegroundText="light" BackgroundColor="#464646">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="POC_LinkIO.Windows.App">
+      <m2:VisualElements DisplayName="POC-LinkIO.Windows" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="POC-LinkIO.Windows" ForegroundText="light" BackgroundColor="#464646">
         <m2:SplashScreen Image="Assets\SplashScreen.png" />
       </m2:VisualElements>
     </Application>

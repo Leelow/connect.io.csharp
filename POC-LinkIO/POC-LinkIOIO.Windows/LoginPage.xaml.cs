@@ -1,4 +1,6 @@
-﻿using System;
+﻿using link.io.csharp;
+using link.io.csharp.model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -21,11 +23,13 @@ namespace POC_LinkIO
     /// </summary>
     public sealed partial class LoginPage : Page, INotifyPropertyChanged
     {
+        private string server = "link-io.insa-rennes.fr:443";
+        private string api_key = "BCHY8PwT8foOpn23lJLL";
         private string login;
 
         public LoginPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             DataContext = this;
         }
 
@@ -51,10 +55,20 @@ namespace POC_LinkIO
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            link.io.csharp.LinkIO linkio = null;
+
+            LinkIOSetup.Instance.create().connectTo(server).withAPIKey(api_key).withMail(login).withPassword(Password.Password).connect((link.io.csharp.LinkIO lio) =>
+            {
+                lio.joinRoom("abcd", (string a, List<User> b) => { });
+                linkio = lio;
+            });
+
+            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(1));
+
             Frame rootFrame = Window.Current.Content as Frame;
-            if (!rootFrame.Navigate(typeof(WhiteBoardPage), Login))
+            if (!((Frame)Window.Current.Content).Navigate(typeof(WhiteBoardPage), linkio))
             {
                 throw new Exception("Failed to go to the next page.");
             }

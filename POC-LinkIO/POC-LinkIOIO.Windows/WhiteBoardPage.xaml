@@ -41,7 +41,7 @@
                     </Button.Template>
                 </Button>
 
-                <!-- TCamera button -->
+                <!-- Camera button -->
                 <Button Name="ButtonPhoto" Click="ButtonPhotoClicked" Height="75">
                     <Button.Template>
                         <ControlTemplate>
@@ -51,7 +51,8 @@
                 </Button>
             </StackPanel>
 
-            <Canvas  PointerPressed="pointerPressed"
+            <Canvas
+                PointerPressed="pointerPressed"
                 PointerMoved="pointerMoved"
                 PointerReleased="pointerReleased"
                 PointerExited="pointerExited"
@@ -72,7 +73,7 @@
 
             <ScrollViewer Name="ScrollViewer" Grid.Column="0" VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400px">
-                    <TextBlock Name="Tchat" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="12" Margin="10,10,10,10" />
+                    <TextBlock Name="Tchat" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="15" Margin="10,10,10,10" />
                     <TextBox Name="TchatText" PlaceholderText="Tchat" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400" KeyUp="SendMessage" />
                 </StackPanel>
             </ScrollViewer>

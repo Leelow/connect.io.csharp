@@ -6,25 +6,21 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI;
-
-using LinkIOcsharp;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.Media.Capture;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage;
 using Windows.Media.MediaProperties;
-using LinkIOcsharp.model;
 using System.ComponentModel;
 using Windows.UI.Xaml.Controls.Primitives;
+using link.io.csharp.model;
 
 namespace POC_LinkIO
 {
     public sealed partial class WhiteBoardPage : Page, INotifyPropertyChanged
     {
-        private string login;
-        private string server = "bastienbaret.com:8080";
-        private LinkIOcsharp.LinkIO lio;
+        private link.io.csharp.LinkIO lio;
 
         private CanvasInteraction canvasInteraction;
 
@@ -33,13 +29,12 @@ namespace POC_LinkIO
         private Point lastPoint;
         private Boolean isDrawing;
 
+        private User currentUser;
         private List<String> users;
 
 
         public WhiteBoardPage()
         {
-            Application.Current.DebugSettings.EnableFrameRateCounter = false;
-
             InitializeComponent();
             DataContext = this;
 
@@ -70,14 +65,13 @@ namespace POC_LinkIO
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            login = e.Parameter as string;
+            lio = e.Parameter as link.io.csharp.LinkIO;
         }
 
         private void PageLoaded(object sender, RoutedEventArgs r)
         {
             // Config the connect.io instance
-            users.Add(login);
-            lio = LinkIOImp.create().connectTo(server).withUser(login);
+            currentUser = lio.getCurrentUser();
 
             lio.on("clear", async (o) =>
             {
@@ -93,10 +87,11 @@ namespace POC_LinkIO
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     Event e = (Event)o;
-                    String str = e.get<String>("img");
+                    Dictionary<string, dynamic> data = e.get<Dictionary<string, dynamic>>();
+                    String str = data["img"];
                     Byte[] imgBytes = Convert.FromBase64String(str.Split(',')[1]);
-                    Size size = new Size(e.get<double>("w"), e.get<double>("h"));
-                    Point position = new Point(e.get<double>("x"), e.get<double>("y"));
+                    Size size = new Size(data["w"], data["h"]);
+                    Point position = new Point(data["x"], data["y"]);
 
                     if (size.Width > 0 && size.Height > 0)
                     {
@@ -112,10 +107,11 @@ namespace POC_LinkIO
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     Event e = (Event)o;
-                    Point fromPoint = new Point(e.get<double>("fromX") * Canvas.Width, e.get<double>("fromY") * Canvas.Height);
-                    Point toPoint = new Point(e.get<double>("toX") * Canvas.Width, e.get<double>("toY") * Canvas.Height);
-                    int thickness = e.containsKey("thinckness") ? e.get<int>("thickness") : 5;
-                    canvasInteraction.DrawLine(fromPoint, toPoint, e.get<String>("color"), thickness);
+                    Dictionary<string, dynamic> data = e.get<Dictionary<string, dynamic>>();
+                    Point fromPoint = new Point(data["fromX"] * Canvas.Width, data["fromY"] * Canvas.Height);
+                    Point toPoint = new Point(data["toX"] * Canvas.Width, data["toY"] * Canvas.Height);
+                    int thickness = data.ContainsKey("thinckness") ? data["thickness"] : 5;
+                    canvasInteraction.DrawLine(fromPoint, toPoint, data["color"], thickness);
                 });
 
             });
@@ -125,7 +121,8 @@ namespace POC_LinkIO
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     Event e = (Event)o;
-                    Tchat.Text += "\n" + e.get<string>("author") + " : " + e.get<string>("text");
+                    Dictionary<string, dynamic> data = e.get<Dictionary<string, dynamic>>();
+                    Tchat.Text += "\n" + data["author"] + " : " + data["text"];
                 });
 
             });
@@ -137,7 +134,7 @@ namespace POC_LinkIO
                     List<String> usersConnected = new List<String>();
                     foreach (User user in o)
                     {
-                        usersConnected.Add(user.Login);
+                        usersConnected.Add(user.Mail);
                     }
                     usersConnected.RemoveAll(item => users.Contains(item));
                     foreach (String user in usersConnected)
@@ -148,9 +145,9 @@ namespace POC_LinkIO
                     List<String> usersDisconnected = users;
                     foreach(User user in o)
                     {
-                        if (usersDisconnected.Contains(user.Login))
+                        if (usersDisconnected.Contains(user.Mail))
                         {
-                            usersDisconnected.Remove(user.Login);
+                            usersDisconnected.Remove(user.Mail);
                         }
                     }
                     foreach (String user in usersDisconnected)
@@ -160,19 +157,12 @@ namespace POC_LinkIO
 
                     foreach (User user in o)
                     {
-                        if (!users.Contains(user.Login))
+                        if (!users.Contains(user.Mail))
                         {
-                            users.Add(user.Login);
+                            users.Add(user.Mail);
                         }
                     }
                 });
-            });
-
-
-            // Connect to the server and join the "abcd" room
-            lio.connect(() =>
-            {
-                lio.joinRoom("abcd", (string a, List<User> b) => { });
             });
         }
 
@@ -265,7 +255,7 @@ namespace POC_LinkIO
             {
                 Object message = new
                 {
-                    author = login,
+                    author = currentUser.Mail,
                     text = TchatText.Text
                 };
 
