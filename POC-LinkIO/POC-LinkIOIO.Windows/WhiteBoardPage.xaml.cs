@@ -144,7 +144,6 @@ namespace POC_LinkIO
                     foreach (String user in usersConnected)
                     {
                         WriteMessage(null, "\n" + user + " is now connected", false);
-                        previousAuthor = "";
                     }
 
                     List<String> usersDisconnected = users;
@@ -158,7 +157,6 @@ namespace POC_LinkIO
                     foreach (String user in usersDisconnected)
                     {
                         WriteMessage(null, "\n" + user + " is now disconnected", false);
-                        previousAuthor = "";
                     }
 
                     foreach (User user in o)
@@ -290,6 +288,8 @@ namespace POC_LinkIO
 
                 grid.Children.Add(block);
                 Tchat.Children.Add(grid);
+
+                previousAuthor = "";
             }
             else
             {
@@ -339,15 +339,13 @@ namespace POC_LinkIO
 
                         grid2.Children.Add(authorblock);
                         Tchat.Children.Add(grid2);
-
-                        previousAuthor = author;
                     }
 
 
                     Grid grid = new Grid()
                     {
                         HorizontalAlignment = HorizontalAlignment.Left,
-                        Margin = new Thickness(3,0,3,3)
+                        Margin = new Thickness(3, 0, 3, 3)
                     };
 
                     TextBlock textblock = new TextBlock()
@@ -370,6 +368,8 @@ namespace POC_LinkIO
                     grid.Children.Add(rectangle);
                     Tchat.Children.Add(grid);
                 }
+
+                previousAuthor = author;
             }
         }
 
