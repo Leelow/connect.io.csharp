@@ -57,21 +57,6 @@ namespace POC_LinkIO
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            /*link.io.csharp.LinkIO linkio = null;
-
-            LinkIOSetup.Instance.create().connectTo(server).withAPIKey(api_key).withMail(login).withPassword(Password.Password).connect((link.io.csharp.LinkIO lio) =>
-            {
-                lio.joinRoom("abcd", (string a, List<User> b) => { });
-                linkio = lio;
-            });
-
-            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(1));
-
-            Frame rootFrame = Window.Current.Content as Frame;
-            if (!((Frame)Window.Current.Content).Navigate(typeof(WhiteBoardPage), linkio))
-            {
-                throw new Exception("Failed to go to the next page.");
-            }*/
             LinkIOSetup.Instance.create().connectTo(server).withAPIKey(api_key).withMail(login).withPassword(Password.Password).connect(async (link.io.csharp.LinkIO lio) =>
             {
                 lio.joinRoom("abcd", (string a, List<User> b) => { });
