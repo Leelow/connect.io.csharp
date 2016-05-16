@@ -49,7 +49,6 @@ namespace POC_LinkIO
 
         public void DrawImage(Point center, Size s, BitmapImage image)
         {
-
             Image img = new Image();
             img.Source = (ImageSource)image;
 

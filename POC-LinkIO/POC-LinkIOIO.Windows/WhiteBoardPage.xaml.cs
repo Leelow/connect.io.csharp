@@ -19,6 +19,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using System.Linq;
 using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 
 namespace POC_LinkIO
 {
@@ -255,18 +257,24 @@ namespace POC_LinkIO
             var _BitmapImage = new BitmapImage(new Uri(_File.Path));
 
             canvasInteraction.DrawImage(new Point(0.1, 0.1), new Size(0.1, 0.1), _BitmapImage);
-            
 
-            Object image = new
+            using (var inputStream = await _File.OpenSequentialReadAsync())
             {
-                img = _BitmapImage,
-                x = 0.1,
-                y = 0.1,
-                w = 0.1,
-                h = 0.1
-            };
+                var readStream = inputStream.AsStreamForRead();
+                var buffer = new byte[readStream.Length];
+                await readStream.ReadAsync(buffer, 0, buffer.Length);
 
-            lio.send("image", image, false);
+                Object image = new
+                {
+                    img = "data:image/png;base64," + Convert.ToBase64String(buffer),
+                    x = 0.1,
+                    y = 0.1,
+                    w = 0.1,
+                    h = 0.1
+                };
+
+                lio.send("image", image, false);
+            }
         }
 
         private void SendMessage(object sender, KeyRoutedEventArgs e)
