@@ -92,6 +92,5 @@ namespace POC_LinkIO
         {
             Canvas.Children.Clear();
         }
-
     }
 }
