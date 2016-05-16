@@ -266,7 +266,7 @@ namespace POC_LinkIO
                     text = TchatText.Text
                 };
 
-                lio.send("message", message, true/*TODO*/);
+                lio.send("message", message, false/*TODO*/);
                 WriteMessage(currentUser, TchatText.Text, true);
                 TchatText.Text = "";
             }
