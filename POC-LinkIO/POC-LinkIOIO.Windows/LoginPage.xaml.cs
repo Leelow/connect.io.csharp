@@ -3,18 +3,8 @@ using link.io.csharp.model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace POC_LinkIO
 {
@@ -26,11 +16,13 @@ namespace POC_LinkIO
         private string server = "link-io.insa-rennes.fr:443";
         private string api_key = "BCHY8PwT8foOpn23lJLL";
         private string login;
+        private string room;
 
         public LoginPage()
         {
             InitializeComponent();
             DataContext = this;
+            Room = "abcd";
         }
 
         public string Login
@@ -43,6 +35,19 @@ namespace POC_LinkIO
             {
                 login = value;
                 OnPropertyChanged("Login");
+            }
+        }
+
+        public string Room
+        {
+            get
+            {
+                return room;
+            }
+            set
+            {
+                room = value;
+                OnPropertyChanged("Room");
             }
         }
 
@@ -59,7 +64,7 @@ namespace POC_LinkIO
         {
             LinkIOSetup.Instance.create().connectTo(server).withAPIKey(api_key).withMail(login).withPassword(Password.Password).connect(async (link.io.csharp.LinkIO lio) =>
             {
-                lio.joinRoom("abcd", (string a, List<User> b) => { });
+                lio.joinRoom(room, (string a, List<User> b) => { });
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
                     Frame rootFrame = Window.Current.Content as Frame;

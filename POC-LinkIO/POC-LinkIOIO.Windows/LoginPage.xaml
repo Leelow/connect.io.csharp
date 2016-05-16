@@ -15,6 +15,7 @@
             <Image Source="img/logo.png" Width="285" Margin="0,0,0,20" />
             <TextBox Width="300" PlaceholderText="Login" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Login, Mode=TwoWay}" />
             <PasswordBox Name="Password" Width="300" PlaceholderText="Mot de passe" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            <TextBox Width="300" PlaceholderText="Room" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Room, Mode=TwoWay}" Margin="0,5,0,0" />
             <Button Content="Connexion" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0" BorderBrush="#535353" Background="#535353" Click="Button_Click" />
         </StackPanel>
     </Grid>
