@@ -33,7 +33,7 @@ namespace POC_LinkIO
         private Boolean isDrawing;
 
         private User currentUser;
-        private String previousAuthor;
+        private User previousAuthor;
         private Dictionary<String, User> users;
 
 
@@ -64,7 +64,7 @@ namespace POC_LinkIO
 
             isDrawing = false;
 
-            previousAuthor = "";
+            previousAuthor = null;
             users = new Dictionary<String, User>();
         }
 
@@ -87,6 +87,8 @@ namespace POC_LinkIO
                     }
                 });
             });
+
+
 
             lio.on("clear", async (o) =>
             {
@@ -137,7 +139,15 @@ namespace POC_LinkIO
                 {
                     Event e = (Event)o;
                     Dictionary<string, dynamic> data = e.get<Dictionary<string, dynamic>>();
-                    WriteMessage(data["author"], data["text"], false);
+                    User user = new User()
+                    {
+                        Name = data["author"]["Name"],
+                        FirstName = data["author"]["FirstName"],
+                        Role = data["author"]["Role"],
+                        Mail = data["author"]["Mail"],
+                        ID = data["author"]["ID"]
+                    };
+                    WriteMessage(user, data["text"], false);
                 });
 
             });
@@ -252,17 +262,17 @@ namespace POC_LinkIO
             {
                 Object message = new
                 {
-                    author = currentUser.Mail,
+                    author = currentUser,
                     text = TchatText.Text
                 };
 
-                lio.send("message", message, false);
-                WriteMessage(currentUser.Mail, TchatText.Text, true);
+                lio.send("message", message, true/*TODO*/);
+                WriteMessage(currentUser, TchatText.Text, true);
                 TchatText.Text = "";
             }
         }
 
-        private void WriteMessage(string author, string text, bool me)
+        private void WriteMessage(User author, string text, bool me)
         {
             if (author == null)
             {
@@ -282,7 +292,7 @@ namespace POC_LinkIO
                 grid.Children.Add(block);
                 Tchat.Children.Add(grid);
 
-                previousAuthor = "";
+                previousAuthor = null;
             }
             else
             {
@@ -307,7 +317,7 @@ namespace POC_LinkIO
                         BorderBrush = new SolidColorBrush(Color.FromArgb(255, 188, 199, 214)),
                         Background = new SolidColorBrush(Color.FromArgb(255, 224, 237, 255)),
                         BorderThickness = new Thickness(1),
-                        Padding = new Thickness(3),
+                        Padding = new Thickness(7),
                         Child = textblock
                     };
 
@@ -316,7 +326,7 @@ namespace POC_LinkIO
                 }
                 else
                 {
-                    if (!previousAuthor.Equals(author))
+                    if (previousAuthor == null || !previousAuthor.Mail.Equals(author.Mail))
                     {
                         Grid grid2 = new Grid()
                         {
@@ -327,7 +337,7 @@ namespace POC_LinkIO
                         {
                             FontSize = 15,
                             Foreground = new SolidColorBrush(Colors.Black),
-                            Text = author
+                            Text = /*TODOauthor.FirstName + " " + */author.Name
                         };
 
                         grid2.Children.Add(authorblock);
@@ -354,7 +364,7 @@ namespace POC_LinkIO
                         BorderBrush = new SolidColorBrush(Color.FromArgb(255, 188, 199, 214)),
                         Background = new SolidColorBrush(Color.FromArgb(255, 254, 254, 254)),
                         BorderThickness = new Thickness(1),
-                        Padding = new Thickness(3),
+                        Padding = new Thickness(7),
                         Child = textblock
                     };
 

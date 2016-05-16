@@ -71,7 +71,7 @@
                 <ColumnDefinition Width="0" MaxWidth="150" />-->
             </Grid.ColumnDefinitions>
 
-            <ScrollViewer Name="ScrollViewer" Grid.Column="0" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Name="ScrollViewer" Grid.Column="0" VerticalScrollBarVisibility="Visible">
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400">
                     <StackPanel Name="Tchat" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" Width="380" />
                     <TextBox Name="TchatText" PlaceholderText="Tchat" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400" KeyUp="SendMessage" />
