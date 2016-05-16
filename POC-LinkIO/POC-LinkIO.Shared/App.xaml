@@ -3,5 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:POC_LinkIO">
-
+    
+    <Application.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="ButtonPointerOverBackgroundThemeBrush" Color="#454545"/>
+            <SolidColorBrush x:Key="ButtonPressedBackgroundThemeBrush" Color="#535353"/>
+            <SolidColorBrush x:Key="ButtonPressedForegroundThemeBrush" Color="White"/>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

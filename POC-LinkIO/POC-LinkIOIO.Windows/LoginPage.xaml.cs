@@ -54,7 +54,7 @@ namespace POC_LinkIO
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
             }
         }
-
+         
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             LinkIOSetup.Instance.create().connectTo(server).withAPIKey(api_key).withMail(login).withPassword(Password.Password).connect(async (link.io.csharp.LinkIO lio) =>
@@ -67,11 +67,8 @@ namespace POC_LinkIO
                     {
                         throw new Exception("Failed to go to the next page.");
                     }
-                });
-                
+                });               
             });
-
-            
         }
     }
 }

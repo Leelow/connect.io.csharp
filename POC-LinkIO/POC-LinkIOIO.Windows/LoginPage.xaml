@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    
     <Grid Background="#FFEDEDED">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -15,8 +15,7 @@
             <Image Source="img/logo.png" Width="285" Margin="0,0,0,20" />
             <TextBox Width="300" PlaceholderText="Login" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Login, Mode=TwoWay}" />
             <PasswordBox Name="Password" Width="300" PlaceholderText="Mot de passe" VerticalAlignment="Center" HorizontalAlignment="Left" />
-            <Button Content="Connexion" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0" BorderBrush="#535353" Background="#535353" Click="Button_Click">
-            </Button>
+            <Button Content="Connexion" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0" BorderBrush="#535353" Background="#535353" Click="Button_Click" />
         </StackPanel>
     </Grid>
 </Page>
