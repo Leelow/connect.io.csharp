@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using link.io.csharp.model;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using System.Linq;
 
 namespace POC_LinkIO
 {
@@ -33,7 +34,7 @@ namespace POC_LinkIO
 
         private User currentUser;
         private String previousAuthor;
-        private List<String> users;
+        private Dictionary<String, User> users;
 
 
         public WhiteBoardPage()
@@ -64,7 +65,7 @@ namespace POC_LinkIO
             isDrawing = false;
 
             previousAuthor = "";
-            users = new List<String>();
+            users = new Dictionary<String, User>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -76,6 +77,16 @@ namespace POC_LinkIO
         {
             // Config the connect.io instance
             currentUser = lio.getCurrentUser();
+            lio.getAllUsersInCurrentRoom(async (o) =>
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    foreach (User user in o)
+                    {
+                        users.Add(user.Mail, user);
+                    }
+                });
+            });
 
             lio.on("clear", async (o) =>
             {
@@ -135,37 +146,19 @@ namespace POC_LinkIO
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    List<String> usersConnected = new List<String>();
-                    foreach (User user in o)
+                    Dictionary<String, User> usersConnected = o.ToDictionary(user => user.Mail, user => user).Where(pair => !users.ContainsKey(pair.Key)).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    foreach (KeyValuePair<String, User> user in usersConnected)
                     {
-                        usersConnected.Add(user.Mail);
-                    }
-                    usersConnected.RemoveAll(item => users.Contains(item));
-                    foreach (String user in usersConnected)
-                    {
-                        WriteMessage(null, "\n" + user + " is now connected", false);
+                        WriteMessage(null, user.Value.FirstName + " " + user.Value.Name + " is now connected", false);
                     }
 
-                    List<String> usersDisconnected = users;
-                    foreach(User user in o)
+                    Dictionary<String, User> usersDisconnected = users.Where(pair => o.Where(user => user.Mail.Equals(pair.Key)).Count() == 0).ToDictionary(pair => pair.Key, pair => pair.Value);
+                    foreach (KeyValuePair<String, User> user in usersDisconnected)
                     {
-                        if (usersDisconnected.Contains(user.Mail))
-                        {
-                            usersDisconnected.Remove(user.Mail);
-                        }
-                    }
-                    foreach (String user in usersDisconnected)
-                    {
-                        WriteMessage(null, "\n" + user + " is now disconnected", false);
+                        WriteMessage(null, user.Value.FirstName + " " + user.Value.Name + " is now disconnected", false);
                     }
 
-                    foreach (User user in o)
-                    {
-                        if (!users.Contains(user.Mail))
-                        {
-                            users.Add(user.Mail);
-                        }
-                    }
+                    users = o.ToDictionary(user => user.Mail, user => user);
                 });
             });
         }
