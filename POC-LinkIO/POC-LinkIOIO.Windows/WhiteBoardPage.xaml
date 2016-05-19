@@ -52,11 +52,11 @@
             </StackPanel>
 
             <Canvas
+                Name="Canvas"
                 PointerPressed="pointerPressed"
                 PointerMoved="pointerMoved"
                 PointerReleased="pointerReleased"
                 PointerExited="pointerExited"
-                Name="Canvas"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Background="White" />

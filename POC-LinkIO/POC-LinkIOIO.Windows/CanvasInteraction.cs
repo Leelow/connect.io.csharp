@@ -36,14 +36,15 @@ namespace POC_LinkIO
 
         public void DrawLine(Point fromPoint, Point toPoint, Color color, int strockeThickness)
         {
-
             Line line = new Line();
             line.Stroke = new SolidColorBrush(color);
+            line.StrokeStartLineCap = PenLineCap.Round;
+            line.StrokeEndLineCap = PenLineCap.Round;
             line.StrokeThickness = strockeThickness;
             line.X1 = fromPoint.X;
-            line.Y1 = fromPoint.Y;
+            line.Y1 = Math.Max(strockeThickness / 2, fromPoint.Y);
             line.X2 = toPoint.X;
-            line.Y2 = toPoint.Y;
+            line.Y2 = Math.Max(strockeThickness / 2, toPoint.Y);
             Canvas.Children.Add(line);
         }
 
