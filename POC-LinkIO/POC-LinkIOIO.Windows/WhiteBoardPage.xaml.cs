@@ -395,6 +395,10 @@ namespace POC_LinkIO
 
                 previousAuthor = author;
             }
+
+            // To go down the scrollbar
+            ScrollViewer.UpdateLayout();
+            ScrollViewer.ChangeView(0, double.MaxValue, 1);
         }
 
         private void OnThumbDragStarted(object sender, DragStartedEventArgs args)

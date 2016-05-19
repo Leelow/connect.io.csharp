@@ -67,25 +67,17 @@
         <Grid Grid.Column="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <!--<ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="0" MaxWidth="150" />-->
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <ScrollViewer Name="ScrollViewer" Grid.Column="0" VerticalScrollBarVisibility="Auto">
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400">
-                    <StackPanel Name="Tchat" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" Width="380" />
-                    <TextBox Name="TchatText" PlaceholderText="Tchat" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400" KeyUp="SendMessage" />
-                </StackPanel>
+            <ScrollViewer Name="ScrollViewer" Grid.Column="0" Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                <StackPanel Name="Tchat" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,10,20,10" Width="360" />
             </ScrollViewer>
 
-            <!--<Thumb Grid.Column="1" Width="5" DragStarted="OnThumbDragStarted" DragDelta="OnThumbDragDelta" PointerEntered="OnThumbPointerEntered" PointerExited="OnThumbPointerExited" />
-
-            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="20" Margin="10,10,10,5">Utilisateurs :</TextBlock>
-                    <TextBlock Name="Users" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="12" Margin="10,0,10,10"/>
-                </StackPanel>
-            </ScrollViewer>-->
+            <TextBox Name="TchatText" Grid.Column="0" Grid.Row="1" PlaceholderText="Tchat" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400" KeyUp="SendMessage" />
         </Grid>
     </Grid>
 </Page>
