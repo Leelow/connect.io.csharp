@@ -128,8 +128,15 @@ namespace POC_LinkIO
                 {
                     Event e = (Event)o;
                     Dictionary<string, dynamic> data = e.get<Dictionary<string, dynamic>>();
-                    Point fromPoint = new Point(data["fromX"] * Canvas.Width, data["fromY"] * Canvas.Height);
-                    Point toPoint = new Point(data["toX"] * Canvas.Width, data["toY"] * Canvas.Height);
+
+                    double fromX, fromY, toX, toY;
+                    try { fromX = data["fromX"]; } catch { fromX = 0; }
+                    try { fromY = data["fromY"]; } catch { fromY = 0; }
+                    try { toX = data["toX"]; } catch { toX = 0; }
+                    try { toY = data["toY"]; } catch { toY = 0; }
+
+                    Point fromPoint = new Point(fromX * Canvas.Width, fromY * Canvas.Height);
+                    Point toPoint = new Point(toX * Canvas.Width, toY * Canvas.Height);
                     int thickness = data.ContainsKey("thinckness") ? data["thickness"] : 5;
                     canvasInteraction.DrawLine(fromPoint, toPoint, data["color"], thickness);
                 });

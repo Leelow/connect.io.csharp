@@ -27,7 +27,7 @@ namespace link.io.csharp.model
                 this.type = (String)jsonObj.SelectToken("type");
                 this.obj = jsonObj.SelectToken("data").ToObject<string>();
             }
-            catch (Exception e){ }
+            catch { }
         }
 
         public T get<T>()

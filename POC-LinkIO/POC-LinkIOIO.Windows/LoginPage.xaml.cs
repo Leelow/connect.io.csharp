@@ -60,7 +60,7 @@ namespace POC_LinkIO
             }
         }
          
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             LinkIOSetup.Instance.create().connectTo(server).withAPIKey(api_key).withMail(login).withPassword(Password.Password).connect(async (link.io.csharp.LinkIO lio) =>
             {
