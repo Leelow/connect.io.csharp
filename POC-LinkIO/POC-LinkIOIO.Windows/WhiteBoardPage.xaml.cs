@@ -164,23 +164,21 @@ namespace POC_LinkIO
 
             });
 
-            lio.onUserInRoomChanged(async (o) =>
+            lio.onUserJoinRoom(async (o) =>
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    Dictionary<String, User> usersConnected = o.ToDictionary(user => user.Mail, user => user).Where(pair => !users.ContainsKey(pair.Key)).ToDictionary(pair => pair.Key, pair => pair.Value);
-                    foreach (KeyValuePair<String, User> user in usersConnected)
-                    {
-                        WriteMessage(null, user.Value.FirstName + " " + user.Value.Name + " is now connected", false);
-                    }
+                    User user = (User)o;
+                    WriteMessage(null, user.FirstName + " " + user.Name + " is now connected", false);
+                });
+            });
 
-                    Dictionary<String, User> usersDisconnected = users.Where(pair => o.Where(user => user.Mail.Equals(pair.Key)).Count() == 0).ToDictionary(pair => pair.Key, pair => pair.Value);
-                    foreach (KeyValuePair<String, User> user in usersDisconnected)
-                    {
-                        WriteMessage(null, user.Value.FirstName + " " + user.Value.Name + " is now disconnected", false);
-                    }
-
-                    users = o.ToDictionary(user => user.Mail, user => user);
+            lio.onUserLeftRoom(async (o) =>
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    User user = (User)o;
+                    WriteMessage(null, user.FirstName + " " + user.Name + " is now disconnected", false);
                 });
             });
         }

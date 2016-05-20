@@ -30,10 +30,16 @@ namespace link.io.csharp
         List<User> getAllUsersInCurrentRoom();
 
         /// <summary>
-        /// Set an event handler that is called when an <seealso cref="User"/> join or leave the current room
+        /// Set an event handler that is called when an <seealso cref="User"/> join the current room
         /// </summary>
-        /// <param name="listener">Called when an <seealso cref="User"/> join or leave the current room with a list of all <seealso cref="User"/> in it.</param>
-        void onUserInRoomChanged(Action<List<User>> listener);
+        /// <param name="listener">Called when an <seealso cref="User"/> join the current room</param>
+        void onUserJoinRoom(Action<User> listener);
+
+        /// <summary>
+        /// Set an event handler that is called when an <seealso cref="User"/> leave the current room
+        /// </summary>
+        /// <param name="listener">Called when an <seealso cref="User"/> leave the current room</param>
+        void onUserLeftRoom(Action<User> listener);
 
         /// <summary>
         /// Add a new event handler for the specified event name

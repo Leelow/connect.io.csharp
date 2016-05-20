@@ -25,7 +25,8 @@ namespace link.io.csharp
         private string password = string.Empty;
 		private string api_key = string.Empty;
         private Action<Exception> errorHandler = null;
-        private Action<List<User>> userInRoomChangedListener;
+        private Action<User> userJoinListener;
+        private Action<User> userLeftListener;
         private Dictionary<String, Action<Event>> eventListeners;
         private bool connected = false;
         private bool cSharpBinarySerializer = false;
@@ -64,14 +65,38 @@ namespace link.io.csharp
 
             socket.On("users", (e) =>
             {
-                usersInRoom = ((JArray)e).ToObject<List<User>>();
-                if (userInRoomChangedListener != null)
+                List<User> users = ((JArray)e).ToObject<List<User>>();
+                if (users.Count > usersInRoom.Count)
                 {
-                    Task.Run(() =>
+                    foreach(User user1 in users)
                     {
-                        userInRoomChangedListener.Invoke(usersInRoom);
-                    });
+                        bool found = false;
+                        foreach(User user2 in usersInRoom)
+                        {
+                            if (user1.ID == user2.ID)
+                                found = true;
+                        }
+                        if (!found)
+                            userJoinListener.Invoke(user1);
+                    }
                 }
+                else
+                {
+                    foreach (User user1 in usersInRoom)
+                    {
+                        bool found = false;
+                        foreach (User user2 in users)
+                        {
+                            if (user1.ID == user2.ID)
+                                found = true;
+                        }
+
+                        if (!found)
+                            userLeftListener.Invoke(user1);
+                    }
+                }
+
+                usersInRoom = users;
             });
 			
 			socket.On("error", (Object o) =>
@@ -172,9 +197,14 @@ namespace link.io.csharp
             }, roomID);
         }
 
-        public void onUserInRoomChanged(Action<List<User>> listener)
+        public void onUserJoinRoom(Action<User> listener)
         {
-            userInRoomChangedListener = listener;
+            userJoinListener = listener;
+        }
+
+        public void onUserLeftRoom(Action<User> listener)
+        {
+            userLeftListener = listener;
         }
 
         public void on(String eventName, Action<Event> listener)
