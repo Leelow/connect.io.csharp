@@ -80,16 +80,18 @@ namespace POC_LinkIO
         {
             // Config the connect.io instance
             currentUser = lio.getCurrentUser();
-            lio.getAllUsersInCurrentRoom(async (o) =>
+            /*async (o) =>
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    foreach (User user in o)
-                    {
-                        users.Add(user.Mail, user);
-                    }
+                    
                 });
-            });
+            });*/
+
+            foreach (User user in lio.getAllUsersInCurrentRoom())
+            {
+                users.Add(user.Mail, user);
+            }
 
 
 
@@ -206,6 +208,7 @@ namespace POC_LinkIO
                     fromY = lastPoint.Y / Canvas.Height,
                     toX = currentPoint.X / Canvas.Width,
                     toY = currentPoint.Y / Canvas.Height,
+                    thickness = DrawingThickness,
                     color = "#" + DrawingColor.ToString().Substring(3,6)
                 };
 

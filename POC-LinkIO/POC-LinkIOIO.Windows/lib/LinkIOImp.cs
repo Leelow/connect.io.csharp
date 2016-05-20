@@ -10,8 +10,6 @@ using Newtonsoft.Json;
 using link.io.csharp.model;
 using link.io.csharp.exception;
 using System.IO;
-//using System.Runtime.Serialization.Formatters.Binary;TODO
-using System.Threading;
 using System.Threading.Tasks;
 using Quobject.Collections.Immutable;
 using Quobject.EngineIoClientDotNet.Client.Transports;
@@ -26,14 +24,17 @@ namespace link.io.csharp
         private string mail = string.Empty;
         private string password = string.Empty;
 		private string api_key = string.Empty;
+        private Action<Exception> errorHandler = null;
         private Action<List<User>> userInRoomChangedListener;
         private Dictionary<String, Action<Event>> eventListeners;
         private bool connected = false;
         private bool cSharpBinarySerializer = false;
         private User currentUser;
+        private List<User> usersInRoom;
 
         internal LinkIOImp()
         {
+            usersInRoom = new List<User>();
             eventListeners = new Dictionary<String, Action<Event>>();
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
@@ -63,12 +64,36 @@ namespace link.io.csharp
 
             socket.On("users", (e) =>
             {
+                usersInRoom = ((JArray)e).ToObject<List<User>>();
                 if (userInRoomChangedListener != null)
                 {
                     Task.Run(() =>
                     {
-                        userInRoomChangedListener.Invoke(((JArray)e).ToObject<List<User>>());
+                        userInRoomChangedListener.Invoke(usersInRoom);
                     });
+                }
+            });
+			
+			socket.On("error", (Object o) =>
+            {
+                if (errorHandler != null)
+                {
+                    string message = (string)((JValue)o);
+                    message = message.Replace("\"", "");
+
+                    switch (((string)((JValue)o)).Replace("\"", ""))
+                    {
+                        case "ACCOUNT ERROR":
+                            errorHandler.Invoke(new AccountNotFoundException("Email does not match any account in API."));
+                            break;
+                        case "PASSWORD ERROR":
+                            errorHandler.Invoke(new WrongPasswordException("Password does not match the given Email."));
+                            break;
+                        case "API_KEY ERROR":
+                        default:
+                            errorHandler.Invoke(new WrongAPIKeyException("The application does not match with an API key."));
+                            break;
+                    }
                 }
             });
 
@@ -79,15 +104,12 @@ namespace link.io.csharp
                 currentUser = new User()
                 {
                     Name = (String)evt.SelectToken("name"),
-                    FirstName = (String)evt.SelectToken("fname"),
+                    FirstName = (String)evt.SelectToken("firstname"),
                     Mail = (String)evt.SelectToken("mail"),
                     ID = (String)evt.SelectToken("id"),
                     Role = (String)evt.SelectToken("role")
                 };
-            });
-            
-            socket.On(Socket.EVENT_CONNECT, () =>
-            {
+
                 Task.Run(() =>
                 {
                     connected = true;
@@ -144,7 +166,8 @@ namespace link.io.csharp
             {
                 Task.Run(() =>
                 {
-                    callback.Invoke(id as String, ((JArray)users).ToObject<List<User>>());
+                    usersInRoom = ((JArray)users).ToObject<List<User>>();
+                    callback.Invoke(id as String, usersInRoom);
                 });
             }, roomID);
         }
@@ -170,7 +193,7 @@ namespace link.io.csharp
             {
                 me = receiveAlso,
                 type = eventName,
-                data = /*cSharpBinarySerializer ? serializeObject(data) :TODO*/ data
+                data = /*cSharpBinarySerializer ? serializeObject(data) : */data
             });
 
             Task.Run(() => { socket.Emit("event", o); });
@@ -195,7 +218,7 @@ namespace link.io.csharp
             {
                 me = receiveAlso,
                 type = eventName,
-                data = /*cSharpBinarySerializer ? serializeObject(data) :TODO*/ data,
+                data = /*cSharpBinarySerializer ? serializeObject(data) : */data,
                 idList = ids
             });
 
@@ -217,7 +240,7 @@ namespace link.io.csharp
             {
                 me = false,
                 type = eventName,
-                data = /*cSharpBinarySerializer ? serializeObject(data) :TODO*/ data,
+                data = /*cSharpBinarySerializer ? serializeObject(data) : */data,
                 idList = ids
             });
 
@@ -289,12 +312,10 @@ namespace link.io.csharp
                 throw new NotConnectedException("ConnectIO: socket disconnected.");
         }
 
-        public void getAllUsersInCurrentRoom(Action<List<User>> callback)
+        public List<User> getAllUsersInCurrentRoom()
         {
             checkConnect();
-            socket.Emit("getAllUsers", (users) => {
-                callback.Invoke(((JArray)users).ToObject<List<User>>());
-            });
+            return usersInRoom;
         }
 
         public bool isConnected()
@@ -325,7 +346,7 @@ namespace link.io.csharp
                 new BinaryFormatter().Serialize(stream, o);
                 return Convert.ToBase64String(stream.ToArray());
             }
-        }TODO*/
+        }*/
 
         internal void setServerIP(string ip)
         {
@@ -345,6 +366,11 @@ namespace link.io.csharp
 		internal void setAPIKey(string api_key)
         {
             this.api_key = api_key;
+        }
+		
+        internal void setErrorHandler(Action<Exception> errorHandler)
+        {
+            this.errorHandler = errorHandler;
         }
     }
 }

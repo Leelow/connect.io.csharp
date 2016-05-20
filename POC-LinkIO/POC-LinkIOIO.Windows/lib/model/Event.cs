@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using System.IO;
-//using System.Runtime.Serialization.Formatters.Binary;TODO
 
 namespace link.io.csharp.model
 {
@@ -27,15 +21,15 @@ namespace link.io.csharp.model
                 this.type = (String)jsonObj.SelectToken("type");
                 this.obj = jsonObj.SelectToken("data").ToObject<string>();
             }
-            catch { }
+            catch {}
         }
 
         public T get<T>()
         {
             /*if(cSharpBinarySerializer)
                 return (T)deserializeObject(obj);
-            elseTODO*/
-            return root.SelectToken("data").ToObject<T>();
+            else*/
+                return root.SelectToken("data").ToObject<T>();
         }
 
         public String getType()
@@ -51,7 +45,7 @@ namespace link.io.csharp.model
             {
                 return new BinaryFormatter().Deserialize(stream);
             }
-        }TODO*/
+        }*/
     }
 
 }

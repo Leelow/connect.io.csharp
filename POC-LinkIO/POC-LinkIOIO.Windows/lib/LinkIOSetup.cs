@@ -24,6 +24,7 @@ namespace link.io.csharp
         private string mail;
         private string password;
 		private string api_key;
+        private Action<Exception> errorHandler;
         private bool cSharpBinarySerializer = false;
 
         private LinkIOSetup()
@@ -65,6 +66,12 @@ namespace link.io.csharp
             this.api_key = api_key;
             return this;
         }
+		
+		public LinkIOSetup withErrorHandler(Action<Exception> errorHandler)
+        {
+            this.errorHandler = errorHandler;
+            return this;
+        }
 
         [Obsolete("Using C# binary serializer instead of default JSON serializer disable communication with the Java client.")]
         public LinkIOSetup useCSharpBinarySerializer(bool use)
@@ -79,6 +86,7 @@ namespace link.io.csharp
             linkIO.setMail(mail);
             linkIO.setUserPassword(password);
 			linkIO.setAPIKey(api_key);
+            linkIO.setErrorHandler(errorHandler);
             linkIO.useCSharpBinarySerializer(cSharpBinarySerializer);
             linkIO.connect(listener);
         }

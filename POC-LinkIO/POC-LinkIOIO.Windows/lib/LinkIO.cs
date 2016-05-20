@@ -27,7 +27,7 @@ namespace link.io.csharp
         /// Retrieve all <seealso cref="User"/> as a list
         /// </summary>
         /// <param name="callback">Called with a list of <seealso cref="User"/> in the current room</param>
-        void getAllUsersInCurrentRoom(Action<List<User>> callback);
+        List<User> getAllUsersInCurrentRoom();
 
         /// <summary>
         /// Set an event handler that is called when an <seealso cref="User"/> join or leave the current room

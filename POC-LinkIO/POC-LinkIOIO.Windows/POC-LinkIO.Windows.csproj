@@ -108,7 +108,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CanvasInteraction.cs" />
+    <Compile Include="lib\exception\AccountNotFoundException.cs" />
     <Compile Include="lib\exception\NotConnectedException.cs" />
+    <Compile Include="lib\exception\WrongAPIKeyException.cs" />
+    <Compile Include="lib\exception\WrongPasswordException.cs" />
     <Compile Include="lib\LinkIO.cs" />
     <Compile Include="lib\LinkIOImp.cs" />
     <Compile Include="lib\LinkIOSetup.cs" />
