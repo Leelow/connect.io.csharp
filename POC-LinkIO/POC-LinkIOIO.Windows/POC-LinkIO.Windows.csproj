@@ -16,6 +16,10 @@
     <SynthesizeLinkMetadata>true</SynthesizeLinkMetadata>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>POC-LinkIO.Windows_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxPackageDir>C:\Users\Valentin\Documents\link.io\link.io.csharp.poc\</AppxPackageDir>
+    <AppxBundlePlatforms>neutral</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>A7AB24445583EAF77A239EA97EAB9EF2C96DBC70</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -123,7 +127,9 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="LinkIOKey.pfx" />
     <None Include="packages.config" />
+    <None Include="POC-LinkIO.Windows_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.scale-100.png" />
@@ -132,7 +138,10 @@
     <Content Include="Assets\StoreLogo.scale-100.png" />
     <Content Include="img\camera.png" />
     <Content Include="img\eraser.png" />
+    <Content Include="img\icon.png" />
     <Content Include="img\logo.png" />
+    <Content Include="img\smallIcon.png" />
+    <Content Include="img\storeIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="WhiteBoardPage.xaml">
@@ -164,6 +173,15 @@
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>LinkIOKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="..\POC-LinkIO.Shared\POC-LinkIO.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
