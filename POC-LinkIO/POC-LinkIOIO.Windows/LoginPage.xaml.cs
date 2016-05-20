@@ -3,6 +3,7 @@ using link.io.csharp.model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -62,18 +63,21 @@ namespace POC_LinkIO
          
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            LinkIOSetup.Instance.create().connectTo(server).withAPIKey(api_key).withMail(login).withPassword(Password.Password).connect(async (link.io.csharp.LinkIO lio) =>
+            if (Room != null && Room != "")
             {
-                lio.joinRoom(room, (string a, List<User> b) => { });
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                LinkIOSetup.Instance.create().connectTo(server).withAPIKey(api_key).withMail(login).withPassword(Password.Password).connect(async (link.io.csharp.LinkIO lio) =>
                 {
-                    Frame rootFrame = Window.Current.Content as Frame;
-                    if (!((Frame)Window.Current.Content).Navigate(typeof(WhiteBoardPage), lio))
+                    lio.joinRoom(room, (string a, List<User> b) => { });
+                    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                     {
-                        throw new Exception("Failed to go to the next page.");
-                    }
-                });               
-            });
+                        Frame rootFrame = Window.Current.Content as Frame;
+                        if (!((Frame)Window.Current.Content).Navigate(typeof(WhiteBoardPage), lio))
+                        {
+                            throw new Exception("Failed to go to the next page.");
+                        }
+                    });
+                });
+            }
         }
     }
 }

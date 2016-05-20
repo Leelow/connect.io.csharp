@@ -33,7 +33,7 @@
                 </ComboBox>
 
                 <!-- Eraser button -->
-                <Button Name="ButtonClear" Click="ButtonClearClicked" Height="75">
+                <Button Name="ButtonClear" Click="ButtonClearClicked" Height="75" Margin="5,0,5,0">
                     <Button.Template>
                         <ControlTemplate>
                             <Image Source="img/eraser.png"/>

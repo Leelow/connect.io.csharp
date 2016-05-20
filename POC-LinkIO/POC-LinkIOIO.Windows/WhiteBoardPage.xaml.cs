@@ -183,17 +183,6 @@ namespace POC_LinkIO
             });
         }
 
-        /*public void updateUsersConnected(List<User> o)
-        {
-            String users = "";
-            foreach (User user in o)
-            {
-                users += user.Login + "\n";
-            }
-            Users.Text = users.Substring(0, users.Length - 1);
-        }*/
-
-
         public void pointerPressed(object sender, PointerRoutedEventArgs e)
         {
             isDrawing = true;
@@ -294,7 +283,7 @@ namespace POC_LinkIO
                     text = TchatText.Text
                 };
 
-                lio.send("message", message, false/*TODO*/);
+                lio.send("message", message, false);
                 WriteMessage(currentUser, TchatText.Text, true);
                 TchatText.Text = "";
             }
@@ -365,7 +354,7 @@ namespace POC_LinkIO
                         {
                             FontSize = 15,
                             Foreground = new SolidColorBrush(Colors.Black),
-                            Text = /*TODOauthor.FirstName + " " + */author.Name
+                            Text = author.FirstName + " " + author.Name
                         };
 
                         grid2.Children.Add(authorblock);
