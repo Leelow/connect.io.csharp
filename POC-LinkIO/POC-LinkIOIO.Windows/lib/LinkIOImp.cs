@@ -116,7 +116,7 @@ namespace link.io.csharp
                             break;
                         case "API_KEY ERROR":
                         default:
-                            errorHandler.Invoke(new WrongAPIKeyException("The application does not match with an API key."));
+                            errorHandler.Invoke(new WrongAPIKeyException("The application does not match with API key."));
                             break;
                     }
                 }

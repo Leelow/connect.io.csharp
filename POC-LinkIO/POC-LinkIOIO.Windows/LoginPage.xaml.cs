@@ -14,8 +14,8 @@ namespace POC_LinkIO
     /// </summary>
     public sealed partial class LoginPage : Page, INotifyPropertyChanged
     {
-        private string server = "link-io.insa-rennes.fr:443";
-        private string api_key = "BCHY8PwT8foOpn23lJLL";
+        private string server;
+        private string api_key;
         private string login;
         private string room;
 
@@ -24,6 +24,8 @@ namespace POC_LinkIO
             InitializeComponent();
             DataContext = this;
             Room = "abcd";
+            Server = "link-io.insa-rennes.fr:443";
+            APIKey = "BCHY8PwT8foOpn23lJLL";
         }
 
         public string Login
@@ -49,6 +51,32 @@ namespace POC_LinkIO
             {
                 room = value;
                 OnPropertyChanged("Room");
+            }
+        }
+
+        public string Server
+        {
+            get
+            {
+                return server;
+            }
+            set
+            {
+                server = value;
+                OnPropertyChanged("Server");
+            }
+        }
+
+        public string APIKey
+        {
+            get
+            {
+                return api_key;
+            }
+            set
+            {
+                api_key = value;
+                OnPropertyChanged("APIKey");
             }
         }
 

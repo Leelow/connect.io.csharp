@@ -11,13 +11,22 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Image Source="img/logo.png" Width="285" Margin="0,0,0,20" />
             <TextBox Width="300" PlaceholderText="Login" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Login, Mode=TwoWay}" />
             <PasswordBox Name="Password" Width="300" PlaceholderText="Mot de passe" VerticalAlignment="Center" HorizontalAlignment="Left" />
             <TextBox Width="300" PlaceholderText="Room" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Room, Mode=TwoWay}" Margin="0,5,0,0" />
             <TextBlock Name="ErrorMessage" Width="300" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Red" Margin="0,5,0,0" FontSize="15" />
             <Button Content="Connexion" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0" BorderBrush="#535353" Background="#535353" Click="Button_Click" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBox Width="300" PlaceholderText="Server" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Server, Mode=TwoWay}" Margin="0,0,5,0" />
+            <TextBox Width="300" PlaceholderText="API Key" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding APIKey, Mode=TwoWay}" />
         </StackPanel>
     </Grid>
 </Page>
